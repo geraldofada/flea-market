@@ -82,8 +82,16 @@
     <div class="container my-3">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item" aria-current="page">Início</li>
-            <li class="breadcrumb-item" aria-current="page">Roupas</li>
+            <li class="breadcrumb-item" aria-current="page">
+                    <a href="./index.html">
+                        Início
+                    </a>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">
+                <a href="./cat_roupa.html">
+                    Roupas
+                </a>
+            </li>
             <li class="breadcrumb-item active" aria-current="page">Jordan</li>
         </ol>
     </nav>
@@ -142,9 +150,7 @@
         <div class="col mt-5">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="card-title">
-                        R$ 2000,00
-                    </h2>
+                    <h2 class="card-title">R$ 2000,00</h2>
                     <h6 class="card-subtitle text-muted">
                         Vendido por: <a href="#" class="card-link">João22234</a>
                     </h6>
@@ -164,6 +170,56 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-8">
+        <h4>Perguntas</h4>
+        <form>
+            <div class="form-group">
+            <textarea
+                class="form-control"
+                id="pergunta"
+                rows="3"
+                placeholder="Escreva sua dúvida"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Fazer uma pergunta</button>
+        </form>
+
+        <ul class="list-group mt-5">
+        <li class="list-group-item">
+            <div class="media">
+                <img src="./assets/profile.png" class="mr-3" alt="...">
+                <div class="media-body">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><a href="#">Juquinha112</a></h5>
+                        <small>3 dias atrás</small>
+                    </div>
+                    <p>
+                        Qual o tamanho do tênis no padrão brasileiro e quanto tempo de uso?
+                    </p>
+                </div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="media">
+                <img src="./assets/profile.png" class="mr-3" alt="...">
+                <div class="media-body">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><a href="#">GeronimoAbel</a></h5>
+                        <small>6 dias atrás</small>
+                    </div>
+                    <p>
+                      Qual o motivo de ser tão caro?
+                    </p>
+                </div>
+            </div>
+        </li>
+        </ul>
+
+        </div>
+    </div>
+
     </div>
 
     </main>

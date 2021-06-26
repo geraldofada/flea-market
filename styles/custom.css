@@ -1,14 +1,24 @@
 .form-box {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.form-box form {
-    flex: 0.5;
+.form-box form, h1 {
+    width: 50%;
+}
+
+textarea {
+    min-height: 150px;
 }
 
 .carousel-inner > .carousel-item > img {
   height: 45vh;
   object-fit: cover;
+}
+
+.media > img {
+    height: 64px;
+    width: 64px;
 }
