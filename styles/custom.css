@@ -1,0 +1,9 @@
+.form-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-box form {
+    flex: 0.5;
+}
