@@ -5,7 +5,6 @@
         <title>Flea Market</title>
         <link rel="stylesheet" type="text/css" href="./styles/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="./styles/fontawesome.min.css">
-        <link rel="stylesheet" type="text/css" href="./styles/custom.css">
     </head>
 
     <body>
@@ -31,7 +30,7 @@
                     Página principal <span class="sr-only">(current)</span>
                     </a>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown active">
                     <a class="nav-link dropdown-toggle"
                         href="#"
                         id="navbarScrollingDropdown"
@@ -41,7 +40,7 @@
                         Categorias
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                        <li><a class="dropdown-item" href="./cat_roupa.html">Roupas</a></li>
+                        <li><a class="dropdown-item" href="#">Roupas</a></li>
                         <li><a class="dropdown-item" href="#">Eletrônicos</a></li>
                         <li><a class="dropdown-item" href="#">Comida</a></li>
                         <li><a class="dropdown-item" href="#">Móveis</a></li>
@@ -71,46 +70,67 @@
                         Entrar
                     </a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Cadastre-se</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="./signup.html">Cadastre-se</a>
                 </li>
             </ul>
 
         </div>
     </nav>
 
+    <div class="container my-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page">Início</li>
+            <li class="breadcrumb-item active" aria-current="page">Roupas</li>
+        </ol>
+    </nav>
+    </div>
+
     <main>
 
-    <div class="container my-lg-5 form-box">
-    <form>
-        <div class="form-row">
-            <div class="col">
-                <div class="form-group">
-                    <label for="name">Nome</label>
-                    <input type="text" class="form-control" id="name">
+    <div class="container my-lg-5">
+        <div class="card-columns">
+            <div class="card">
+                <img src="./assets/jordan.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Jordan</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Roupas / Tênis</h6>
+                    <p class="card-text">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque imperdiet.
+                    </p>
+                    <h5 class="font-weight-bold mb-4">R$ 2000,00</h6>
+                    <a href="#" class="btn btn-primary">Ver Produto</a>
                 </div>
             </div>
-            <div class="col">
-                <div class="form-group">
-                    <label for="name">Sobrenome</label>
-                    <input type="text" class="form-control" id="surname">
-                </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fas fa-caret-left"></i>
+                        </span>
+                    </li>
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">
+                            1
+                            <span class="sr-only">(current)</span>
+                        </span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fas fa-caret-right"></i>
+                        </span>
+                    </li>
+                </ul>
+            </nav>
             </div>
         </div>
-        <div class="form-group">
-            <label for="email">Endereço de E-mail</label>
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
-        </div>
-        <div class="form-group">
-            <label for="pass">Crie uma senha</label>
-            <input type="password" class="form-control" id="pass">
-        </div>
-        <div class="form-group">
-            <label for="passconf">Confirme sua senha</label>
-            <input type="password" class="form-control" id="passconf">
-        </div>
-        <button type="submit" class="btn btn-primary">Crie sua conta</button>
-    </form>
     </div>
 
     </main>
