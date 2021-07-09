@@ -148,10 +148,10 @@ const productList = [
 ];
 
 const productListObjs = toProduct(productList);
-console.log(productListObjs);
 
 const productListCards = productListObjs.map((p) => {
-  const hotChance = Math.floor(Math.random() * 10);
+  const hotChance = Math.floor(Math.random() * 5);
+  console.log(hotChance);
 
   const card = $('<div class="card">');
   const img = $(`<img src="${p.img}" class="card-img-top" alt="...">`);
@@ -159,7 +159,7 @@ const productListCards = productListObjs.map((p) => {
   const title = $('<h5 class="card-title">');
 
   let titleName = null;
-  if (hotChance === 10)
+  if (hotChance === 0)
     titleName = $(`<span class="badge badge-danger">Hot</span> ${p.name}`);
   else
     titleName = `${p.name}`;
@@ -184,5 +184,5 @@ const productListCards = productListObjs.map((p) => {
   return card;
 });
 
-productListCards.forEach(p => $('.card-columns').append(p));
+productListCards.forEach(p => $('.card-columns.home').append(p));
 
