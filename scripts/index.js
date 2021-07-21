@@ -151,9 +151,11 @@ const productListObjs = toProduct(productList);
 
 const productListCards = productListObjs.map((p) => {
   const hotChance = Math.floor(Math.random() * 5);
+  const likes = Math.floor(Math.random() * 10);
+  const dislikes = Math.floor(Math.random() * 10);
   console.log(hotChance);
 
-  const card = $('<div class="card">');
+  const card = $(`<div class="card" data-dislikes="${dislikes}" data-likes="${likes}">`);
   const img = $(`<img src="${p.img}" class="card-img-top" alt="...">`);
   const body = $('<div class="card-body">');
   const title = $('<h5 class="card-title">');
@@ -168,8 +170,28 @@ const productListCards = productListObjs.map((p) => {
   const description = $(`<p class="card-text">${p.description}</p>`);
   const price = $(`<h5 class="mb-4">${p.price}</h5>`);
 
+  const linkAndLikes = $(`<div class="row">`)
   // for now this will be hardcoded
-  const link = $(`<a href="./prod_jordan.html" class="btn btn-primary">Ver Produto</a>`);
+  const link = $(`<a href="./prod_jordan.html" class="ml-4 col-6 btn btn-primary">Ver Produto</a>`);
+  const thumbs = $(`
+    <div class="col-5">
+      <div class="row">
+        <p class="col-1">${likes}</p>
+        
+        <div class="col-1">
+          <i class="clickable far fa-thumbs-up" onclick="giveLike(event);"></i>
+        </div>
+
+        <div class="col-1">
+          <i class="clickable far fa-thumbs-down" onclick="giveDislike(event);"></i>
+        </div>
+
+        <p class="col-1">${dislikes}</p>
+      </div>
+    </div>
+  `);
+
+  linkAndLikes.append(link, thumbs);
 
   title.append(titleName);
   body.append(
@@ -177,7 +199,7 @@ const productListCards = productListObjs.map((p) => {
     cat,
     description,
     price,
-    link,
+    linkAndLikes,
   );
   card.append(img, body);
 
@@ -186,3 +208,49 @@ const productListCards = productListObjs.map((p) => {
 
 productListCards.forEach(p => $('.card-columns.home').append(p));
 
+
+function giveLike(e) {
+  const card = $(e.target).closest('.card');
+  const likeP = $(e.target).parent().prev();
+  const thumbDown = $(e.target).parent().next().children();
+  const dislikeP = thumbDown.parent().next();
+  const thumb = $(e.target);
+
+  const numberLikes = card.data('likes');
+  const numberDislikes = card.data('dislikes');
+
+  if (thumb.hasClass('far')) {
+    card.data('likes', numberLikes + 1);
+    thumb.toggleClass('far fas');
+    likeP.text(numberLikes + 1);
+
+    if (thumbDown.hasClass('fas')) {
+      card.data('dislikes', numberDislikes - 1);
+      thumbDown.toggleClass('far fas');
+      dislikeP.text(numberDislikes - 1);
+    }
+  }
+}
+
+function giveDislike(e) {
+  const card = $(e.target).closest('.card');
+  const dislikeP = $(e.target).parent().next();
+  const thumbUp = $(e.target).parent().prev().children();
+  const likeP = thumbUp.parent().prev();
+  const thumb = $(e.target);
+
+  const numberLikes = card.data('likes');
+  const numberDislikes = card.data('dislikes');
+
+  if (thumb.hasClass('far')) {
+    card.data('dislikes', numberDislikes + 1);
+    thumb.toggleClass('far fas');
+    dislikeP.text(numberDislikes + 1);
+
+    if (thumbUp.hasClass('fas')) {
+      card.data('likes', numberLikes - 1);
+      thumbUp.toggleClass('far fas');
+      likeP.text(numberLikes - 1);
+    }
+  }
+}
