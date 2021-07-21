@@ -22,3 +22,7 @@ textarea {
     height: 64px;
     width: 64px;
 }
+
+.clickable {
+    cursor: pointer;
+}
