@@ -153,7 +153,6 @@ const productListCards = productListObjs.map((p) => {
   const hotChance = Math.floor(Math.random() * 5);
   const likes = Math.floor(Math.random() * 10);
   const dislikes = Math.floor(Math.random() * 10);
-  console.log(hotChance);
 
   const card = $(`<div class="card" data-dislikes="${dislikes}" data-likes="${likes}">`);
   const img = $(`<img src="${p.img}" class="card-img-top" alt="...">`);
@@ -229,6 +228,10 @@ function giveLike(e) {
       thumbDown.toggleClass('far fas');
       dislikeP.text(numberDislikes - 1);
     }
+  } else if (thumb.hasClass('fas')) {
+    card.data('likes', numberLikes - 1);
+    thumb.toggleClass('far fas');
+    likeP.text(numberLikes - 1);
   }
 }
 
@@ -252,5 +255,9 @@ function giveDislike(e) {
       thumbUp.toggleClass('far fas');
       likeP.text(numberLikes - 1);
     }
+  } else if (thumb.hasClass('fas')) {
+    card.data('dislikes', numberDislikes - 1);
+    thumb.toggleClass('far fas');
+    dislikeP.text(numberDislikes - 1);
   }
 }
