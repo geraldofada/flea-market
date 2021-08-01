@@ -1,0 +1,52 @@
+{% extends 'base/index.html' %}
+{% load static %}
+
+{% block breadcrumb %}
+    <div class="container my-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page">Início</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ products.all.0.category.all.0.name }}</li>
+        </ol>
+    </nav>
+    </div>
+{% endblock breadcrumb %}
+
+{% block main %}
+    {% now "Y-m-d" as today%}
+
+    <div class="container my-lg-5">
+        <div class="card-columns">
+            {% for prod in products %}
+                <div class="card">
+                    <img src="{% static 'images/' %}{{ prod.image }}" class="card-img-top" alt="{{ prod.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {% if prod.created_at|date:"Y-m-d" == today%}
+                                <span class="badge badge-danger">Hot</span>
+                            {% endif %}
+
+                            {{ prod.name }}
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            {{ prod.category.all.0.name }}
+
+                            {% if prod.category.all|length > 1 %}
+                                {% for cat in prod.category.all %}
+                                    {% if not forloop.first %}
+                                        / {{ cat.name }}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </h6>
+                        <p class="card-text">
+                            {{ prod.description }}
+                        </p>
+                        <h5 class="mb-4">R$ {{ prod.price }}</h5>
+                        <a href="#" class="btn btn-primary">Ver Produto</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock main %}
