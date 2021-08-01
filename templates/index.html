@@ -32,7 +32,7 @@
                             {{ prod.small_description }}
                         </p>
                         <h5 class="mb-4">R$ {{ prod.price }}</h5>
-                        <a href="#" class="btn btn-primary">Ver Produto</a>
+                        <a href="{% url 'product:product_by_id' prod.id %}" class="btn btn-primary">Ver Produto</a>
                     </div>
                 </div>
             {% endfor %}
