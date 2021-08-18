@@ -8,7 +8,7 @@
         <div class="card-columns">
             {% for prod in products %}
                 <div class="card">
-                    <img src="{% static 'images/' %}{{ prod.image }}" class="card-img-top" alt="{{ prod.name }}">
+                    <img src="{{ prod.image.url }}" class="card-img-top" alt="{{ prod.name }}">
                     <div class="card-body">
                         <h5 class="card-title">
                             {% if prod.created_at|date:"Y-m-d" == today%}

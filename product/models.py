@@ -9,7 +9,7 @@ class Product(models.Model):
     small_description = models.TextField(blank=True)
     description = models.TextField(blank=True)
     slug = models.SlugField(max_length=100)
-    image = models.CharField(max_length=150, blank=True)
+    image = models.ImageField(upload_to='images/')
     quantity = models.IntegerField(default=1)
     available = models.BooleanField(default=True)
 
