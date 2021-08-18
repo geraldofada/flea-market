@@ -66,7 +66,7 @@ def list_by_user(request):
     #TODO(Geraldo): essa parte vai precisar de permissões do usuário logado
     page = request.GET.get('page')
     products = Product.objects.all()
-    paginator = Paginator(products, 3)
+    paginator = Paginator(products, 6)
     prod_obj = paginator.get_page(page)
     context = {
         'categories': categories,
