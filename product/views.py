@@ -1,6 +1,9 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.template.defaultfilters import slugify
+from django.shortcuts import redirect, render
+from django.contrib import messages
 from product.models import Awnser, Product, Question
+from login.models import User
 from product.forms import CreateForm
 from category.models import Category
 
@@ -35,7 +38,16 @@ def create(request):
     if request.method == 'POST':
         form = CreateForm(request.POST, request.FILES)
         if form.is_valid():
-            return HttpResponseRedirect('/')
+            product = form.save(commit=False)
+            product.slug = slugify(product.name)
+
+            #TODO(Geraldo): quando concluir o modelo de usuário, mudar aqui
+            user = User.objects.get(pk=1)
+            product.owner = user
+            product.save()
+
+            messages.success(request, 'Product created with success.')
+            return redirect('product:product_by_id', id=product.id)
     else:
         form = CreateForm()
 
