@@ -1,4 +1,4 @@
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template.defaultfilters import slugify
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator
@@ -87,6 +87,14 @@ def edit(request, id):
     }
 
     return render(request, 'product/edit.html', context)
+
+def delete(request):
+    if request.method == 'GET':
+        id = request.GET.get('prodId')
+        product = Product.objects.get(pk=id)
+        product.image.delete()
+        product.delete()
+        return JsonResponse({'message': 'Produto removido com sucesso.'})
 
 def list_by_user(request):
     categories = Category.objects.all().order_by('name')
