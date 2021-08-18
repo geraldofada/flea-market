@@ -1,6 +1,7 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.template.defaultfilters import slugify
 from django.shortcuts import redirect, render
+from django.core.paginator import Paginator
 from django.contrib import messages
 from product.models import Awnser, Product, Question
 from login.models import User
@@ -58,3 +59,18 @@ def create(request):
     }
 
     return render(request, 'product/create.html', context)
+
+def list_by_user(request):
+    categories = Category.objects.all().order_by('name')
+
+    #TODO(Geraldo): essa parte vai precisar de permissões do usuário logado
+    page = request.GET.get('page')
+    products = Product.objects.all()
+    paginator = Paginator(products, 3)
+    prod_obj = paginator.get_page(page)
+    context = {
+        'categories': categories,
+        'products': prod_obj,
+    }
+
+    return render(request, 'product/list_by_user.html', context)
