@@ -1,7 +1,7 @@
 from django.forms import ModelForm, TextInput
 from product.models import Product
 
-class CreateForm(ModelForm):
+class ProductForm(ModelForm):
     
     class Meta:
         model = Product

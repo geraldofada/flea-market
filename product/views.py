@@ -1,18 +1,18 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.template.defaultfilters import slugify
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib import messages
 from product.models import Awnser, Product, Question
 from login.models import User
-from product.forms import CreateForm
+from product.forms import ProductForm
 from category.models import Category
 
 
 def product_by_id(request, id):
     categories = Category.objects.all()
 
-    product = Product.objects.get(id=id)
+    product = get_object_or_404(Product, pk=id)
 
     questions = []
     questionsQuery = Question.objects.filter(product=id)
@@ -37,7 +37,7 @@ def product_by_id(request, id):
 
 def create(request):
     if request.method == 'POST':
-        form = CreateForm(request.POST, request.FILES)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
             product.slug = slugify(product.name)
@@ -50,7 +50,7 @@ def create(request):
             messages.success(request, 'Product created with success.')
             return redirect('product:product_by_id', id=product.id)
     else:
-        form = CreateForm()
+        form = ProductForm()
 
     categories = Category.objects.all()
     context = {
@@ -59,6 +59,34 @@ def create(request):
     }
 
     return render(request, 'product/create.html', context)
+
+def edit(request, id):
+    product = get_object_or_404(Product, pk=id)
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.slug = slugify(product.name)
+
+            #TODO(Geraldo): quando concluir o modelo de usuário, mudar aqui
+            user = User.objects.get(pk=1)
+            product.owner = user
+            product.save()
+
+            messages.success(request, 'Product updated with success.')
+            return redirect('product:product_by_id', id=product.id)
+    else:
+        form = ProductForm(instance=product)
+
+    categories = Category.objects.all()
+    context = {
+        'product_id': id,
+        'categories': categories,
+        'form': form
+    }
+
+    return render(request, 'product/edit.html', context)
 
 def list_by_user(request):
     categories = Category.objects.all().order_by('name')

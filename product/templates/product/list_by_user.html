@@ -36,7 +36,7 @@
                     <td>{{ prod.quantity }}</td>
                     <td>{{ prod.small_description }}</td>
                     <td>
-                        <button class="btn btn-primary">Editar</button>
+                        <a class="btn btn-primary" href="{%url 'product:edit' prod.id %}">Editar</a>
                         <button class="btn btn-danger">Remover</button>
                     </td>
                 </tr>
