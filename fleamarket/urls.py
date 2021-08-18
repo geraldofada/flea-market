@@ -6,7 +6,7 @@ from fleamarket import views, settings
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('', include('login.urls')),
+    path('', include('users.urls')),
     path('product/', include('product.urls')),
     path('category/', include('category.urls')),
     path('admin/', admin.site.urls),
