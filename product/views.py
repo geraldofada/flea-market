@@ -1,10 +1,10 @@
-from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http.response import JsonResponse
+from django.contrib.auth.decorators import login_required
 from django.template.defaultfilters import slugify
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib import messages
 from product.models import Awnser, Product, Question
-from login.models import User
 from product.forms import ProductForm
 from category.models import Category
 
@@ -35,16 +35,14 @@ def product_by_id(request, id):
 
     return render(request, 'product/product_by_id.html', context)
 
+@login_required
 def create(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
             product.slug = slugify(product.name)
-
-            #TODO(Geraldo): quando concluir o modelo de usuário, mudar aqui
-            user = User.objects.get(pk=1)
-            product.owner = user
+            product.owner = request.user
             product.save()
 
             messages.success(request, 'Product created with success.')
@@ -60,6 +58,7 @@ def create(request):
 
     return render(request, 'product/create.html', context)
 
+@login_required
 def edit(request, id):
     product = get_object_or_404(Product, pk=id)
 
@@ -68,10 +67,7 @@ def edit(request, id):
         if form.is_valid():
             product = form.save(commit=False)
             product.slug = slugify(product.name)
-
-            #TODO(Geraldo): quando concluir o modelo de usuário, mudar aqui
-            user = User.objects.get(pk=1)
-            product.owner = user
+            product.owner = request.user
             product.save()
 
             messages.success(request, 'Product updated with success.')
@@ -88,6 +84,7 @@ def edit(request, id):
 
     return render(request, 'product/edit.html', context)
 
+@login_required
 def delete(request):
     if request.method == 'GET':
         id = request.GET.get('prodId')
@@ -96,12 +93,13 @@ def delete(request):
         product.delete()
         return JsonResponse({'message': 'Produto removido com sucesso.'})
 
+@login_required
 def list_by_user(request):
     categories = Category.objects.all().order_by('name')
 
-    #TODO(Geraldo): essa parte vai precisar de permissões do usuário logado
     page = request.GET.get('page')
     products = Product.objects.all()
+    products = Product.objects.all().filter(owner_id=request.user.id)
     paginator = Paginator(products, 6)
     prod_obj = paginator.get_page(page)
     context = {

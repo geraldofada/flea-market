@@ -1,11 +1,11 @@
 from django.db import models
 from category.models import Category
-from login.models import User
+from users.models import User
 
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    price = models.DecimalField(max_digits=12, decimal_places=2, default=1)
     small_description = models.TextField(blank=True)
     description = models.TextField(blank=True)
     slug = models.SlugField(max_length=100)
