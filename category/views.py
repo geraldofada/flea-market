@@ -12,6 +12,7 @@ def products_by_category(request, slug):
     context = {
         'categories': categories,
         'products': products,
+        'category': category
     }
 
     return render(request, 'category/products_by_category.html', context)

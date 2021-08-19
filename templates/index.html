@@ -1,16 +1,6 @@
 {% extends 'base/index.html' %}
 {% load static %}
 
-{% block pstyle %}
-    footer {
-        position: fixed;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: $zindex-fixed;
-    }
-{% endblock pstyle %}
-
 {% block main %}
     {% now "Y-m-d" as today%}
 
@@ -28,15 +18,7 @@
                             {{ prod.name }}
                         </h5>
                         <h6 class="card-subtitle mb-2 text-muted">
-                            {{ prod.category.all.0.name }}
-
-                            {% if prod.category.all|length > 1 %}
-                                {% for cat in prod.category.all %}
-                                    {% if not forloop.first %}
-                                        / {{ cat.name }}
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
+                            {{ prod.category.name }}
                         </h6>
                         <p class="card-text">
                             {{ prod.small_description }}

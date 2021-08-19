@@ -24,7 +24,7 @@ class ProductForm(ModelForm):
         self.fields['category'].error_messages={'required': 'Campo obrigatório'}
         self.fields['category'].widget.attrs.update({'class': 'form-control form-control-sm'})
 
-        self.fields['price'].min_value=0
+        self.fields['price'].min_value=1
         self.fields['price'].error_messages={'required': 'Campo obrigatório.',
                                              'invalid': 'Valor inválido.',
                                              'max_digits': 'Mais de 5 dígitos no total.',
@@ -35,7 +35,7 @@ class ProductForm(ModelForm):
             'onkeypress': 'return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 44'
         })
 
-        self.fields['quantity'].min_value=0
+        self.fields['quantity'].min_value=1
         self.fields['quantity'].error_messages={
             'required': 'Campo obrigatório',
             'min_value': 'A quantidade deve ser maior ou igual a zero.'

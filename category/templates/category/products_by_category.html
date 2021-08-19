@@ -6,7 +6,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item" aria-current="page">Início</li>
-            <li class="breadcrumb-item active" aria-current="page">{{ products.all.0.category.all.0.name }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
         </ol>
     </nav>
     </div>
@@ -19,7 +19,7 @@
         <div class="card-columns">
             {% for prod in products %}
                 <div class="card">
-                    <img src="{% static 'images/' %}{{ prod.image }}" class="card-img-top" alt="{{ prod.name }}">
+                    <img src="{{ prod.image.url }}" class="card-img-top" alt="{{ prod.name }}">
                     <div class="card-body">
                         <h5 class="card-title">
                             {% if prod.created_at|date:"Y-m-d" == today%}
@@ -29,15 +29,7 @@
                             {{ prod.name }}
                         </h5>
                         <h6 class="card-subtitle mb-2 text-muted">
-                            {{ prod.category.all.0.name }}
-
-                            {% if prod.category.all|length > 1 %}
-                                {% for cat in prod.category.all %}
-                                    {% if not forloop.first %}
-                                        / {{ cat.name }}
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
+                            {{ prod.category.name }}
                         </h6>
                         <p class="card-text">
                             {{ prod.small_description }}
