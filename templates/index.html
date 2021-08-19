@@ -1,6 +1,16 @@
 {% extends 'base/index.html' %}
 {% load static %}
 
+{% block pstyle %}
+    footer {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: $zindex-fixed;
+    }
+{% endblock pstyle %}
+
 {% block main %}
     {% now "Y-m-d" as today%}
 

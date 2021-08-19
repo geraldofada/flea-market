@@ -44,18 +44,20 @@
             <li class="nav-item">
                 <a class="nav-link" href="#"></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link"
-                    href="{% url 'product:create' %}">
-                    Criar anúncio
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link"
-                    href="{% url 'product:list_by_user' %}">
-                    Ver seus anúncios
-                </a>
-            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                        href="{% url 'product:create' %}">
+                        Criar anúncio
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                        href="{% url 'product:list_by_user' %}">
+                        Ver seus anúncios
+                    </a>
+                </li>
+            {% endif %}
         </ul>
 
         <form class="form-inline my-2 my-lg-0">
@@ -69,14 +71,22 @@
         </form>
 
         <ul class="navbar-nav mx-4">
-            <li class="nav-item">
-                <a class="btn btn-outline-success mr-3" href="{% url 'users:login' %}">
-                    Entrar
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:signup' %}">Cadastre-se</a>
-            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="btn btn-outline-success mr-3" href="{% url 'users:logout' %}">
+                        Sair
+                    </a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="btn btn-outline-success mr-3" href="{% url 'users:login' %}">
+                        Entrar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:signup' %}">Cadastre-se</a>
+                </li>
+            {% endif %}
         </ul>
 
     </div>
