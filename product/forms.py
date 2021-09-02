@@ -1,4 +1,5 @@
 from django.forms import ModelForm, TextInput
+from django.core.exceptions import ValidationError
 from product.models import Product
 
 class ProductForm(ModelForm):
@@ -29,7 +30,8 @@ class ProductForm(ModelForm):
                                              'invalid': 'Valor inválido.',
                                              'max_digits': 'Mais de 5 dígitos no total.',
                                              'max_decimal_places': 'Mais de 2 dígitos decimais.',
-                                             'max_whole_digits': 'Mais de 3 dígitos inteiros.'}
+                                             'max_whole_digits': 'Mais de 3 dígitos inteiros.',
+                                             'min_value': 'Um produto tem que custar pelo menos um real.'}
         self.fields['price'].widget.attrs.update({
             'class': 'form-control form-control-sm',
             'onkeypress': 'return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 44'
@@ -47,3 +49,18 @@ class ProductForm(ModelForm):
         self.fields['image'].error_messages={'required': 'Campo obrigatório',
                                               'invalid_image': 'Imagem inválida.'}
         self.fields['image'].widget.attrs.update({'class': 'btn btn-outline-secondary btn-sm'})
+
+
+    def clean_price(self):
+        data = self.cleaned_data['price']
+        if float(data) <= 0:
+            raise ValidationError(self.fields['price'].error_messages['min_value'])
+        else:
+            return data
+
+    def clean_quantity(self):
+        data = self.cleaned_data['quantity']
+        if float(data) < 0:
+            raise ValidationError(self.fields['quantity'].error_messages['min_value'])
+        else:
+            return data

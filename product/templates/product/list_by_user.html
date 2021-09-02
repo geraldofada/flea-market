@@ -30,7 +30,7 @@
         </thead>
         <tbody>
             {% for prod in products %}
-                <tr>
+                <tr data-id={{ prod.id }}>
                     <td>{{ prod.name }}</td>
                     <td>R$ {{ prod.price }}</td>
                     <td>{{ prod.quantity }}</td>
