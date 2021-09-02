@@ -74,6 +74,8 @@ def edit(request, id):
 
             messages.success(request, 'Produto atualizado com sucesso.')
             return redirect('product:product_by_id', id=product.id)
+        else:
+            messages.error(request, form.errors)
     else:
         form = ProductForm(instance=product)
 
