@@ -45,7 +45,7 @@ def create(request):
             product.owner = request.user
             product.save()
 
-            messages.success(request, 'Produto atualizado com sucesso.')
+            messages.success(request, 'Produto criado com sucesso.')
             return redirect('product:product_by_id', id=product.id)
         else:
             messages.error(request, form.errors)
@@ -72,7 +72,7 @@ def edit(request, id):
             product.owner = request.user
             product.save()
 
-            messages.success(request, 'Product updated with success.')
+            messages.success(request, 'Produto atualizado com sucesso.')
             return redirect('product:product_by_id', id=product.id)
     else:
         form = ProductForm(instance=product)
