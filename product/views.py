@@ -95,7 +95,9 @@ def delete(request):
         product = Product.objects.get(pk=id)
         product.image.delete()
         product.delete()
-        return JsonResponse({'message': 'Produto removido com sucesso.'})
+        return JsonResponse({
+            'removedId': id,
+        })
 
 @login_required
 def list_by_user(request):

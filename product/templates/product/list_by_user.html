@@ -82,6 +82,8 @@
 
 {% block pscript %}
 function handleDelete(prodId) {
+    let removedId = null;
+
     $('#remove-confirmation').modal('show');
     $('#remove-confirmation').on('click', '.btn-danger', () => {
         $.ajax({
@@ -90,14 +92,17 @@ function handleDelete(prodId) {
             data: {
                 prodId
             },
-            success: () => {
+            success: (res) => {
+                removedId = res.removedId;
                 $('#remove-confirmation').modal('hide');
                 $('#remove-success').modal('toggle');
             },
         });
     })
 
-    $('#remove-success').on('hidden.bs.modal', () => location.reload());
+    $('#remove-success').on('hidden.bs.modal', () => {
+        $(`[data-id=${removedId}]`).remove();
+    });
 }
 {% endblock pscript %}
 
