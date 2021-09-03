@@ -1,7 +1,6 @@
 const fixFooter = () => {
   if ($('body').height() > $(window).height()) {
     $('footer').removeClass('footer-fixed');
-    console.log('alo');
   } else {
     $('footer').addClass('footer-fixed');
   }
