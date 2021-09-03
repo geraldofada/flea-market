@@ -157,7 +157,7 @@ function handleFastCreate(form, e) {
                     <td>
                         <form>
                             {% csrf_token %}
-                            <input type="text" class="form-control" value="${prod.quantity}" onblur="handleUpdateQuantity(${prod.id}, this.value, event)"/>
+                            <input type="text" class="form-control" value="${res.quantity}" onblur="handleUpdateQuantity(${res.id}, this.value, event)"/>
                         </form>
                     </td>
                     <td>${res.small_description}</td>
