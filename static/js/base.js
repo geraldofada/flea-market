@@ -11,11 +11,11 @@ $(() => {
   fixFooter();
   $(window).on('resize', () => fixFooter());
 
-  $('#fast-creation-form').on('shown.bs.collapse', () => {
+  $('#fast-creation-collapse').on('shown.bs.collapse', () => {
     fixFooter();
   });
 
-  $('#fast-creation-form').on('hidden.bs.collapse', () => {
+  $('#fast-creation-collapse').on('hidden.bs.collapse', () => {
     fixFooter();
   });
 });
