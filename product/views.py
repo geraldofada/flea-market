@@ -1,4 +1,5 @@
-from django.http.response import JsonResponse
+from django.http.response import HttpResponseBadRequest, JsonResponse
+from django.core.serializers import serialize
 from django.contrib.auth.decorators import login_required
 from django.template.defaultfilters import slugify
 from django.shortcuts import redirect, render, get_object_or_404
@@ -103,6 +104,8 @@ def delete(request):
 def list_by_user(request):
     categories = Category.objects.all().order_by('name')
 
+    form = ProductForm()
+
     page = request.GET.get('page')
     products = Product.objects.all()
     products = Product.objects.all().filter(owner_id=request.user.id)
@@ -111,6 +114,41 @@ def list_by_user(request):
     context = {
         'categories': categories,
         'products': prod_obj,
+        'form': form
     }
 
     return render(request, 'product/list_by_user.html', context)
+
+@login_required
+def fast_create(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.slug = slugify(product.name)
+            product.owner = request.user
+            product.save()
+
+            res = {
+                'id': product.id,
+                'price': product.price,
+                'quantity': product.quantity,
+                'small_description': product.small_description,
+                'name': product.name,
+            }
+
+            return JsonResponse(res, safe=False)
+        else:
+            return HttpResponseBadRequest(form.errors.as_json(), content_type="application/json")
+
+@login_required
+def update_quantity(request):
+    if request.method == 'POST':
+        id = request.POST.get('prodId')
+        quantity = request.POST.get('quantity')
+        product = Product.objects.get(pk=id)
+        product.quantity = quantity
+        product.save()
+        return JsonResponse({
+            'quantity': quantity,
+        })

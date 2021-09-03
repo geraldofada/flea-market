@@ -2,19 +2,63 @@
 {% load static %}
 
 {% block pstyle %}
-    footer {
-        position: fixed;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: $zindex-fixed;
+    .ptab:hover {
+        text-decoration: underline;
+    }
+
+    #arrow {
+        font-size: 20px;
+        margin-left: 10px;
     }
 {% endblock pstyle %}
+
+{% block dynamic_messages %}
+    <div id="dynamic_messages"></div>
+{% endblock dynamic_messages %}
 
 {% block breadcrumb %}{% endblock breadcrumb %}
 
 {% block main %}
     <div class="container my-lg-5">
+
+    <h1 class="display-5 mb-3 ptab" data-toggle="collapse" href="#fast-creation-collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Criação rápida
+        <span id="arrow"><i class="fas fa-chevron-down"></i></span>
+    </h1>
+    <div class="collapse form-box" id="fast-creation-collapse" style="align-items: flex-start;">
+        <form method="POST" enctype="multipart/form-data" class="mb-5" onsubmit="handleFastCreate(this, event);">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">Nome do produto</label>
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.small_description.id_for_label }}">Descreva em poucas palavras</label>
+                {{ form.small_description }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.price.id_for_label }}">Preço</label>
+                {{ form.price }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.quantity.id_for_label }}">Quantidade</label>
+                {{ form.quantity }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.image.id_for_label }}">Foto do produto</label>
+                {{ form.image }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">Descrição</label>
+                {{ form.description }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.category.id_for_label }}">Categoria</label>
+                {{ form.category }}
+            </div>
+            <button type="submit" class="btn btn-primary">Criar anúncio</button>
+        </form>
+    </div>
 
     <h1 class="display-5 mb-5">Seus produtos a venda</h1>
 
@@ -28,12 +72,17 @@
                 <th scope="col">Ações</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id='tbody-products'>
             {% for prod in products %}
                 <tr data-id={{ prod.id }}>
                     <td>{{ prod.name }}</td>
                     <td>R$ {{ prod.price }}</td>
-                    <td>{{ prod.quantity }}</td>
+                    <td>
+                        <form>
+                            {% csrf_token %}
+                            <input type="text" class="form-control" value="{{ prod.quantity }}" onblur="handleUpdateQuantity({{prod.id}}, this.value, event)"/>
+                        </form>
+                    </td>
                     <td>{{ prod.small_description }}</td>
                     <td>
                         <a class="btn btn-primary" href="{%url 'product:edit' prod.id %}">Editar</a>
@@ -81,6 +130,95 @@
 {% endblock main %}
 
 {% block pscript %}
+$(() => {
+    $('#fast-creation-collapse').on('shown.bs.collapse', () => {
+        $('#arrow > i').attr('class', 'fas fa-chevron-up');
+    });
+
+    $('#fast-creation-collapse').on('hidden.bs.collapse', () => {
+        $('#arrow > i').attr('class', 'fas fa-chevron-down');
+    });
+});
+
+function handleFastCreate(form, e) {
+    e.preventDefault();
+    const data = new FormData(form);
+    $.ajax({
+        url: '{%url 'product:fast_create' %}',
+        type: 'POST',
+        data,
+        processData: false,
+        contentType: false,
+        success: (res) => {
+            const tr = `
+                <tr data-id=${res.id}>
+                    <td>${res.name}</td>
+                    <td>R$ ${res.price}</td>
+                    <td>
+                        <form>
+                            {% csrf_token %}
+                            <input type="text" class="form-control" value="${prod.quantity}" onblur="handleUpdateQuantity(${prod.id}, this.value, event)"/>
+                        </form>
+                    </td>
+                    <td>${res.small_description}</td>
+                    <td>
+                        <a class="btn btn-primary" href="/product/edit/${res.id}">Editar</a>
+                        <button class="btn btn-danger" onclick="handleDelete(${res.id});">Remover</button>
+                    </td>
+                </tr>
+            `;
+            $('#tbody-products').before(tr);
+
+            const alert = `
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Anúncio criado com sucesso.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            `;
+            $('#dynamic_messages').html(alert);
+        },
+        error: (res) => {
+            let message = '';
+            const errors = res.responseJSON;
+            for (const error in errors) {
+                for (const msg of errors[error]) {
+                    message += `${msg['message']}<br>`;
+                }
+            }
+            const alert = `
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            `;
+            $('#dynamic_messages').html(alert);
+        },
+    });
+}
+
+function handleUpdateQuantity(prodId, quantity, e) {
+    e.preventDefault();
+
+    console.log(prodId, quantity);
+
+    $.ajax({
+        url: '{%url 'product:update_quantity' %}',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        type: 'POST',
+        data: {
+            prodId,
+            quantity,
+        },
+        success: (res) => {},
+    });
+}
+
 function handleDelete(prodId) {
     let removedId = null;
 
@@ -98,7 +236,7 @@ function handleDelete(prodId) {
                 $('#remove-success').modal('toggle');
             },
         });
-    })
+    });
 
     $('#remove-success').on('hidden.bs.modal', () => {
         $(`[data-id=${removedId}]`).remove();

@@ -20,6 +20,7 @@
     </head>
 
     <body>
+    {% block dynamic_messages %}{% endblock dynamic_messages %}
     {% block messages %}
         {% if messages %}
             {% for message in messages %}
