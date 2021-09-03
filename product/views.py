@@ -107,8 +107,7 @@ def list_by_user(request):
     form = ProductForm()
 
     page = request.GET.get('page')
-    products = Product.objects.all()
-    products = Product.objects.all().filter(owner_id=request.user.id)
+    products = Product.objects.all().filter(owner_id=request.user.id).order_by('-created_at')
     paginator = Paginator(products, 6)
     prod_obj = paginator.get_page(page)
     context = {
