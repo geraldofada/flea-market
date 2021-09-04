@@ -42,14 +42,25 @@
                 </div>
 
                 <div class="card-body">
-                    <button href="#" class="btn btn-outline-primary mb-3" type="button">
-                        <i class="fas fa-credit-card mr-3"></i>
-                        Comprar agora
-                    </button>
-                    <button href="#" class="btn btn-primary" type="button">
-                        <i class="fas fa-shopping-cart mr-3"></i>
-                        Adicionar ao carrinho
-                    </button>
+                    {% if user.is_authenticated %}
+                        <button href="#" class="btn btn-outline-primary mb-3" type="button">
+                            <i class="fas fa-credit-card mr-3"></i>
+                            Comprar agora
+                        </button>
+                        <button href="#" class="btn btn-primary" type="button">
+                            <i class="fas fa-shopping-cart mr-3"></i>
+                            Adicionar ao carrinho
+                        </button>
+                    {% else %}
+                        <button href="#" class="btn btn-outline-primary mb-3" type="button" disabled>
+                            <i class="fas fa-credit-card mr-3"></i>
+                            Comprar agora
+                        </button>
+                        <button href="#" class="btn btn-primary" type="button" disabled>
+                            <i class="fas fa-shopping-cart mr-3"></i>
+                            Adicionar ao carrinho
+                        </button>
+                    {% endif %}
                 </div>
 
             </div>
@@ -59,15 +70,21 @@
     <div class="row">
         <div class="col-8">
         <h4>Perguntas</h4>
-        <form>
+        <form method="POST" action="{% url 'product:create_question' product.id %}">
+            {% csrf_token %}
             <div class="form-group">
             <textarea
                 class="form-control"
-                id="pergunta"
+                id="question"
+                name="question"
                 rows="3"
                 placeholder="Escreva sua dúvida"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Fazer uma pergunta</button>
+            {% if user.is_authenticated %}
+                <button type="submit" class="btn btn-primary">Fazer uma pergunta</button>
+            {% else %}
+                <button type="submit" class="btn btn-primary" disabled>Faça login para perguntar</button>
+            {% endif %}
         </form>
         {% if questions %}
             <ul class="list-group mt-5">

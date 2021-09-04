@@ -177,3 +177,22 @@ def update_quantity(request):
         return JsonResponse({
             # 'total_price': float(total_price['sum'])
         })
+
+@login_required
+def create_question(request, id):
+    product = get_object_or_404(Product, pk=id)
+
+    if request.method == 'POST':
+        if (request.user == product.owner):
+            messages.error(request, 'Não é possível fazer perguntas no próprio anúncio.')
+        else:
+            question = request.POST.get('question')
+            if question == '':
+                return redirect('product:product_by_id', id=id)
+            
+            new_question = Question(text=question, owner=request.user, product=product)
+            new_question.save()
+            messages.success(request, 'Pergunta criada com sucesso.')
+            
+
+    return redirect('product:product_by_id', id=id)
