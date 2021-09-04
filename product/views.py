@@ -196,3 +196,22 @@ def create_question(request, id):
             
 
     return redirect('product:product_by_id', id=id)
+
+@login_required
+def answer_question(request, id):
+    question = get_object_or_404(Question, pk=id)
+
+    if request.method == 'POST':
+        if (request.user == question.owner):
+            messages.error(request, 'Não é possível responder a própria pergunta.')
+        else:
+            answer = request.POST.get('answer')
+            if answer == '':
+                return redirect('product:product_by_id', id=question.product.id)
+            
+            new_answer = Awnser(text=answer, owner=request.user, question=question)
+            new_answer.save()
+            messages.success(request, 'Pergunta respondida com sucesso.')
+            
+
+    return redirect('product:product_by_id', id=question.product.id)

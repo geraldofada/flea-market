@@ -116,6 +116,19 @@
                                 </p>
                             </div>
                         </div>
+                    {% elif user.is_authenticated and user.id == product.owner.id %}
+                        <form class="mt-4" method="POST" action="{% url 'product:answer_question' question.0.id %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                            <textarea
+                                class="form-control"
+                                id="answer"
+                                name="answer"
+                                rows="3"
+                                placeholder="Escreva sua resposta"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Responder</button>
+                        </form>
                     {% endif %}
                 </li>
             {% endfor %}
