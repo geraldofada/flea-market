@@ -110,10 +110,16 @@ def list_by_user(request):
     products = Product.objects.all().filter(owner_id=request.user.id).order_by('-created_at')
     paginator = Paginator(products, 6)
     prod_obj = paginator.get_page(page)
+
+    total_per_page = 0
+    for prod in prod_obj:
+        total_per_page += (prod.price * prod.quantity)
+
     context = {
         'categories': categories,
         'products': prod_obj,
-        'form': form
+        'form': form,
+        'total_per_page': total_per_page
     }
 
     return render(request, 'product/list_by_user.html', context)

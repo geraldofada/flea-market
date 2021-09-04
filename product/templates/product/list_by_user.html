@@ -1,5 +1,7 @@
 {% extends "base/index.html" %}
 {% load static %}
+{% load humanize %}
+{% load l10n %}
 
 {% block pstyle %}
     .ptab:hover {
@@ -66,9 +68,9 @@
         <thead>
             <tr>
                 <th scope="col">Nome do anúncio</th>
-                <th scope="col">Preço</th>
-                <th scope="col">Quantidade</th>
                 <th scope="col">Descrição</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Preço</th>
                 <th scope="col">Ações</th>
             </tr>
         </thead>
@@ -76,20 +78,25 @@
             {% for prod in products %}
                 <tr data-id={{ prod.id }}>
                     <td>{{ prod.name }}</td>
-                    <td>R$ {{ prod.price }}</td>
+                    <td>{{ prod.small_description }}</td>
                     <td>
                         <form>
                             {% csrf_token %}
                             <input type="text" class="form-control" value="{{ prod.quantity }}" onblur="handleUpdateQuantity({{prod.id}}, this.value, event)"/>
                         </form>
                     </td>
-                    <td>{{ prod.small_description }}</td>
+                    <td>R$ {{ prod.price|intcomma }}</td>
                     <td>
                         <a class="btn btn-primary" href="{%url 'product:edit' prod.id %}">Editar</a>
                         <button class="btn btn-danger" onclick="handleDelete({{ prod.id }});">Remover</button>
                     </td>
                 </tr>
             {% endfor %}
+
+            <tr>
+                <td colspan="3"><strong>Total:</strong></td>
+                <td id="total-price" data-price={{ total_per_page|unlocalize }}><strong>R$ {{ total_per_page|intcomma }}</strong></td>
+            </tr>
         </tbody>
     </table>
 
@@ -150,24 +157,33 @@ function handleFastCreate(form, e) {
         processData: false,
         contentType: false,
         success: (res) => {
+            const formattedPrice = parseFloat(res.price).toLocaleString('pt-br', {minimumFractionDigits: 2});
             const tr = `
                 <tr data-id=${res.id}>
                     <td>${res.name}</td>
-                    <td>R$ ${res.price}</td>
+                    <td>${res.small_description}</td>
                     <td>
                         <form>
                             {% csrf_token %}
                             <input type="text" class="form-control" value="${res.quantity}" onblur="handleUpdateQuantity(${res.id}, this.value, event)"/>
                         </form>
                     </td>
-                    <td>${res.small_description}</td>
+                    <td>R$ ${formattedPrice}</td>
                     <td>
                         <a class="btn btn-primary" href="/product/edit/${res.id}">Editar</a>
                         <button class="btn btn-danger" onclick="handleDelete(${res.id});">Remover</button>
                     </td>
                 </tr>
             `;
-            $('#tbody-products').before(tr);
+            $('#tbody-products').prepend(tr);
+
+            const totalPrice = parseFloat($('#total-price').data('price'));
+            const newTotalPrice = totalPrice + parseFloat(res.price) * parseFloat(res.quantity);
+            console.log(newTotalPrice);
+            $('#total-price').data('price', newTotalPrice);
+            $('#total-price').html(
+                `<strong>R$ ${newTotalPrice.toLocaleString('pt-br', {minimumFractionDigits: 2})}</strong>`
+            );
 
             const alert = `
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
