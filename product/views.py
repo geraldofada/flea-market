@@ -41,7 +41,7 @@ def list_by_name(request):
     products = []
     if request.method == 'POST':
         name = request.POST.get('name')
-        products = Product.objects.all().filter(name__contains=name)
+        products = Product.objects.all().filter(name__contains=name, quantity__gt=0).order_by('-created_at')
 
     context = {
         'categories': categories,

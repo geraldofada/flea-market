@@ -1,5 +1,6 @@
 {% extends 'base/index.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block main %}
     {% now "Y-m-d" as today%}
@@ -23,7 +24,7 @@
                         <p class="card-text">
                             {{ prod.small_description }}
                         </p>
-                        <h5 class="mb-4">R$ {{ prod.price }}</h5>
+                        <h5 class="mb-4">R$ {{ prod.price|intcomma }}</h5>
                         <a href="{% url 'product:product_by_id' prod.id %}" class="btn btn-primary">Ver Produto</a>
                     </div>
                 </div>

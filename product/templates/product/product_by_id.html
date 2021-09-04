@@ -1,5 +1,6 @@
 {% extends 'base/index.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block pstyle %}
     .awnser {
@@ -35,7 +36,7 @@
         <div class="col mt-5">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="card-title">R$ {{ product.price }}</h2>
+                    <h2 class="card-title">R$ {{ product.price|intcomma }}</h2>
                     <h6 class="card-subtitle text-muted">
                         Vendido por: <a href="#" class="card-link">{{ product.owner.username }}</a>
                     </h6>
@@ -69,25 +70,29 @@
 
     <div class="row">
         <div class="col-8">
-        <h4>Perguntas</h4>
-        <form method="POST" action="{% url 'product:create_question' product.id %}">
-            {% csrf_token %}
-            <div class="form-group">
-            <textarea
-                class="form-control"
-                id="question"
-                name="question"
-                rows="3"
-                placeholder="Escreva sua dúvida"></textarea>
-            </div>
-            {% if user.is_authenticated %}
-                <button type="submit" class="btn btn-primary">Fazer uma pergunta</button>
-            {% else %}
-                <button type="submit" class="btn btn-primary" disabled>Faça login para perguntar</button>
-            {% endif %}
-        </form>
+        {% if questions or user.id != product.owner.id %}
+            <h4>Perguntas</h4>
+        {% endif %}
+        {% if user.id != product.owner.id %}
+            <form method="POST" action="{% url 'product:create_question' product.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                <textarea
+                    class="form-control"
+                    id="question"
+                    name="question"
+                    rows="3"
+                    placeholder="Escreva sua dúvida"></textarea>
+                </div>
+                {% if user.is_authenticated %}
+                    <button type="submit" class="btn btn-primary">Fazer uma pergunta</button>
+                {% else %}
+                    <button type="submit" class="btn btn-primary" disabled>Faça login para perguntar</button>
+                {% endif %}
+            </form>
+        {% endif %}
         {% if questions %}
-            <ul class="list-group mt-5">
+            <ul class="list-group mt-3">
             {% for question in questions %}
                 <li class="list-group-item">
                     <div class="media">

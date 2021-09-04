@@ -7,7 +7,7 @@ def products_by_category(request, slug):
     categories = Category.objects.all()
 
     category = categories.get(slug=slug)
-    products = Product.objects.all().filter(category=category.id)
+    products = Product.objects.all().filter(category=category.id, quantity__gt=0).order_by('-created_at')
 
     context = {
         'categories': categories,
