@@ -35,6 +35,22 @@ def product_by_id(request, id):
 
     return render(request, 'product/product_by_id.html', context)
 
+def list_by_name(request):
+    categories = Category.objects.all()
+
+    products = []
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        products = Product.objects.all().filter(name__contains=name)
+
+    context = {
+        'categories': categories,
+        'products': products,
+        'name': name
+    }
+
+    return render(request, 'product/list_by_name.html', context)
+
 @login_required
 def create(request):
     if request.method == 'POST':
