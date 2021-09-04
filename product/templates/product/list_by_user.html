@@ -82,10 +82,14 @@
                     <td>
                         <form>
                             {% csrf_token %}
-                            <input type="text" class="form-control" value="{{ prod.quantity }}" onblur="handleUpdateQuantity({{prod.id}}, this.value, event)"/>
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="{{ prod.quantity }}"
+                                onblur="handleUpdateQuantity({{prod.id}}, this.value, event)"/>
                         </form>
                     </td>
-                    <td>R$ {{ prod.price|intcomma }}</td>
+                    <td data-price={{ prod.price|unlocalize }}>R$ {{ prod.price|intcomma }}</td>
                     <td>
                         <a class="btn btn-primary" href="{%url 'product:edit' prod.id %}">Editar</a>
                         <button class="btn btn-danger" onclick="handleDelete({{ prod.id }});">Remover</button>
@@ -165,10 +169,14 @@ function handleFastCreate(form, e) {
                     <td>
                         <form>
                             {% csrf_token %}
-                            <input type="text" class="form-control" value="${res.quantity}" onblur="handleUpdateQuantity(${res.id}, this.value, event)"/>
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="${res.quantity}"
+                                onblur="handleUpdateQuantity(${res.id}, this.value, event)"/>
                         </form>
                     </td>
-                    <td>R$ ${formattedPrice}</td>
+                    <td data-price=${parseFloat(res.price)}>R$ ${formattedPrice}</td>
                     <td>
                         <a class="btn btn-primary" href="/product/edit/${res.id}">Editar</a>
                         <button class="btn btn-danger" onclick="handleDelete(${res.id});">Remover</button>
@@ -179,7 +187,6 @@ function handleFastCreate(form, e) {
 
             const totalPrice = parseFloat($('#total-price').data('price'));
             const newTotalPrice = totalPrice + parseFloat(res.price) * parseFloat(res.quantity);
-            console.log(newTotalPrice);
             $('#total-price').data('price', newTotalPrice);
             $('#total-price').html(
                 `<strong>R$ ${newTotalPrice.toLocaleString('pt-br', {minimumFractionDigits: 2})}</strong>`
@@ -219,7 +226,18 @@ function handleFastCreate(form, e) {
 function handleUpdateQuantity(prodId, quantity, e) {
     e.preventDefault();
 
-    console.log(prodId, quantity);
+    if (quantity < 0) {
+        const alert = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                A quantidade não pode ser menor que zero.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        `;
+        $('#dynamic_messages').html(alert);
+        return
+    }
 
     $.ajax({
         url: '{%url 'product:update_quantity' %}',
@@ -231,7 +249,30 @@ function handleUpdateQuantity(prodId, quantity, e) {
             prodId,
             quantity,
         },
-        success: (res) => {},
+        success: (res) => {
+            let totalPrice = 0;
+            $('#tbody-products').children().each((_, value) => {
+                const quantity = $(value).find('input[type=text]').val();
+                const price = $(value).find('td').eq(3).data('price');
+                if (quantity && price) {
+                    totalPrice += quantity * price;
+                }
+            });
+            $('#total-price').data('price', totalPrice);
+            $('#total-price').html(
+                `<strong>R$ ${totalPrice.toLocaleString('pt-br', {minimumFractionDigits: 2})}</strong>`
+            );
+
+            const alert = `
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Quantidade atualizada.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            `;
+            $('#dynamic_messages').html(alert);
+        },
     });
 }
 

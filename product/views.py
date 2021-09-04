@@ -1,5 +1,4 @@
 from django.http.response import HttpResponseBadRequest, JsonResponse
-from django.core.serializers import serialize
 from django.contrib.auth.decorators import login_required
 from django.template.defaultfilters import slugify
 from django.shortcuts import redirect, render, get_object_or_404
@@ -151,9 +150,14 @@ def update_quantity(request):
     if request.method == 'POST':
         id = request.POST.get('prodId')
         quantity = request.POST.get('quantity')
+        # limit = int(request.POST.get('limit'))
+
         product = Product.objects.get(pk=id)
         product.quantity = quantity
         product.save()
+
+        # total_price = Product.objects.all().filter(owner_id=request.user.id).order_by('-created_at')[:limit].aggregate(sum=Sum(F('price') * F('quantity')))
+
         return JsonResponse({
-            'quantity': quantity,
+            # 'total_price': float(total_price['sum'])
         })
