@@ -56,8 +56,18 @@ class UserCreationForm(auth_forms.UserCreationForm):
         self.fields['address'].widget.attrs.update({'class': 'form-control form-control-sm'})
         self.fields['address'].required = True
     
+    def clean_cellphone(self):
+        data = self.cleaned_data['cellphone']
+        if not data.isdigit():
+            raise ValidationError("Por favor insira somente números")
+
+        return data
+    
     def clean_cpf(self):
         data = self.cleaned_data['cpf']
+        if not data.isdigit():
+            raise ValidationError("Por favor insira somente números")
+
         if len(data) < 11:
             raise ValidationError("Cpf não é válido")
         
