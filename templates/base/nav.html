@@ -56,7 +56,13 @@
                 <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.view_name == 'product:list_by_user' %}active{% endif %}"
                         href="{% url 'product:list_by_user' %}">
-                        Ver seus anúncios
+                        Seus anúncios
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.view_name == 'payment:show' %}active{% endif %}"
+                        href="{% url 'payment:show' %}">
+                        Suas compras
                     </a>
                 </li>
             {% endif %}
