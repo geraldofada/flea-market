@@ -1,4 +1,3 @@
-from product.views import delete
 from django.urls import path
 from cart import views
 
