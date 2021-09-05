@@ -1,3 +1,13 @@
+from product.models import Product
+import uuid
 from django.db import models
+from django.db.models.deletion import CASCADE
+from category.models import Category
+from users.models import User
 
-# Create your models here.
+
+class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    owner = models.OneToOneField(User, on_delete=CASCADE)
+    products = models.ManyToManyField(Product)
