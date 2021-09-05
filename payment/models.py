@@ -15,6 +15,7 @@ class Purchase(models.Model):
     product = models.ForeignKey(Product, on_delete=SET_NULL, null=True)
     product_name = models.CharField(max_length=100)
     product_price = models.DecimalField(max_digits=12, decimal_places=2, default=1)
+    product_small_description = models.TextField(blank=True)
 
     def __str__(self):
         return f'{self.owner.username}_{self.product_name}'

@@ -10,16 +10,21 @@ from cart.models import Cart
 @login_required
 def show(request):
     categories = Category.objects.all()
-    cart = Cart.objects.get(owner=request.user).products.all()
+    cart = Cart.objects.get(owner=request.user)
 
     total = 0
-    for prod in cart:
-        total += prod.price
+    for prod in cart.products.all():
+        if prod.quantity > 0:
+            total += prod.price
+        else:
+            cart.products.remove(prod)
+    
+    cart.save()
 
     context = {
         'categories': categories,
         'total': total,
-        'cart': cart
+        'cart': cart.products.all()
     }
 
     return render(request, 'cart/show.html', context)
