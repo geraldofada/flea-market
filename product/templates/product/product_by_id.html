@@ -56,12 +56,17 @@
                                 Adicionar ao carrinho
                             </button>
                         </form>
+                    {% elif product.quantity == 0 %}
+                        <button class="btn btn-outline-primary mb-3" type="button" disabled>
+                            <i class="fas fa-times mr-3"></i>
+                            Produto fora de estoque
+                        </button>
                     {% else %}
-                        <button href="#" class="btn btn-outline-primary mb-3" type="button" disabled>
+                        <button class="btn btn-outline-primary mb-3" type="button" disabled>
                             <i class="fas fa-credit-card mr-3"></i>
                             Comprar agora
                         </button>
-                        <button href="#" class="btn btn-primary" type="button" disabled>
+                        <button class="btn btn-primary" type="button" disabled>
                             <i class="fas fa-shopping-cart mr-3"></i>
                             Adicionar ao carrinho
                         </button>

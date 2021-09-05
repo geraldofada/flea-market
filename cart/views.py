@@ -29,10 +29,11 @@ def add(request, id):
     if request.method == 'GET':
         cart = Cart.objects.get(owner=request.user)
         product = Product.objects.get(pk=id)
-        cart.products.add(product)
-        cart.save()
+        if product.quantity > 0:
+            cart.products.add(product)
+            cart.save()
 
-        return redirect('cart:show')
+            return redirect('cart:show')
 
 @login_required
 def delete(request):
