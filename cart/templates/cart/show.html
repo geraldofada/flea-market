@@ -47,10 +47,7 @@
             </tbody>
         </table>
 
-        <form method="POST">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Finalizar compra</button>
-        </form>
+        <button type="button" class="btn btn-primary" onclick="handleCloseCart();">Finalizar compra</button>
 
     {% else %}
         <h1 class="display-5 mb-5">Seu carrinho está vazio :(</h1>
@@ -76,6 +73,27 @@
 {% endblock main %}
 
 {% block pscript %}
+function handleCloseCart() {
+    productIds = [];
+    $('#tbody-products').children().each((_, value) => {
+        productIds.push($(value).data('id'))
+    });
+
+    $.ajax({
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        url: '{%url 'payment:close_cart' %}',
+        type: 'POST',
+        data: {
+            productIds
+        },
+        success: (res) => {
+            window.location = res.url
+        },
+    });
+}
+
 function handleDelete(prodId) {
     let removedId = null;
 
