@@ -37,7 +37,7 @@ class Question(models.Model):
     def __str__(self):
         return self.text
 
-class Awnser(models.Model):
+class Answer(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     text = models.TextField(blank=True)
 

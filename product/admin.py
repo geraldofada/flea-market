@@ -7,5 +7,5 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Product, ProductAdmin)
-admin.site.register(models.Awnser)
+admin.site.register(models.Answer)
 admin.site.register(models.Question)

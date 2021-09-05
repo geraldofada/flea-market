@@ -61,6 +61,9 @@ class UserCreationForm(auth_forms.UserCreationForm):
         if not data.isdigit():
             raise ValidationError("Por favor insira somente números")
 
+        if len(data) < 11:
+            raise ValidationError("Por favor insira um celular válido")
+
         return data
     
     def clean_cpf(self):

@@ -6,6 +6,7 @@ from django.db import models
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     cpf = models.CharField(max_length=11, unique=True)
+    email = models.EmailField(unique=True)
     address = models.CharField(max_length=200)
     cellphone = models.CharField(max_length=11)
 

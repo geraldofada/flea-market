@@ -4,7 +4,7 @@ from django.template.defaultfilters import slugify
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib import messages
-from product.models import Awnser, Product, Question
+from product.models import Answer, Product, Question
 from product.forms import ProductForm
 from category.models import Category
 
@@ -21,9 +21,9 @@ def product_by_id(request, id):
             question_awnser = []
             question_awnser.append(q)
 
-            awnser = Awnser.objects.filter(question=q.id)
-            if awnser:
-                question_awnser.append(awnser[0])
+            answer = Answer.objects.filter(question=q.id)
+            if answer:
+                question_awnser.append(answer[0])
 
             questions.append(question_awnser)
 
@@ -215,7 +215,7 @@ def answer_question(request, id):
             if answer == '':
                 return redirect('product:product_by_id', id=question.product.id)
             
-            new_answer = Awnser(text=answer, owner=request.user, question=question)
+            new_answer = Answer(text=answer, owner=request.user, question=question)
             new_answer.save()
             messages.success(request, 'Pergunta respondida com sucesso.')
             
