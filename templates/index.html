@@ -6,6 +6,7 @@
     {% now "Y-m-d" as today%}
 
     <div class="container my-lg-5">
+    {% if products %}
         <div class="card-columns">
             {% for prod in products %}
                 <div class="card">
@@ -30,6 +31,9 @@
                 </div>
             {% endfor %}
         </div>
+    {% else %}
+        <h1 class="display-5 mb-5">Nenhum produto encontrado :(</h1>
+    {% endif %}
     </div>
 {% endblock main %}
 

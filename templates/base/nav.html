@@ -14,13 +14,13 @@
 
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link active"
+                <a class="nav-link {% if request.resolver_match.view_name == 'index' %}active{% endif %}"
                     href="{% url 'index' %}">
                 Página principal <span class="sr-only">(current)</span>
                 </a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle"
+                <a class="nav-link dropdown-toggle {% if request.resolver_match.view_name == 'category:products_by_category' %}active{% endif %}"
                     href="#"
                     id="navbarScrollingDropdown"
                     role="button"
@@ -29,6 +29,7 @@
                     Categorias
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                {% if categories %}
                     {% for cat in categories %}
                         <li>
                             <a class="dropdown-item" href="{% url 'category:products_by_category' cat.slug %}">
@@ -36,8 +37,9 @@
                             </a>
                         </li>
                     {% endfor %}
-                    {% comment %} <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Tudo</a></li> {% endcomment %}
+                {% else %}
+                        <span class="dropdown-item-text">Sem categorias</span>
+                {% endif %}
                 </ul>
             </li>
 
@@ -46,19 +48,27 @@
             </li>
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link"
+                    <a class="nav-link {% if request.resolver_match.view_name == 'product:create' %}active{% endif %}"
                         href="{% url 'product:create' %}">
                         Criar anúncio
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link"
+                    <a class="nav-link {% if request.resolver_match.view_name == 'product:list_by_user' %}active{% endif %}"
                         href="{% url 'product:list_by_user' %}">
                         Ver seus anúncios
                     </a>
                 </li>
             {% endif %}
         </ul>
+
+        {% if user.is_authenticated %}
+            <ul class="navbar-nav mx-4">
+                <span class="navbar-text">
+                    Olá, {{ user.first_name }}!
+                </span>
+            </ul>
+        {% endif %}
 
         <form method="POST" action="{% url 'product:list_by_name' %}" class="form-inline my-2 my-lg-0">
             {% csrf_token %}
@@ -81,11 +91,13 @@
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="btn btn-outline-success mr-3" href="{% url 'users:login' %}">
+                    <a
+                    class="btn btn-outline-success mr-3 {% if request.resolver_match.view_name == 'users:login' %}active{% endif %}"
+                    href="{% url 'users:login' %}">
                         Entrar
                     </a>
                 </li>
-                <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.view_name == 'users:signup' %}active{% endif %}"
                     <a class="nav-link" href="{% url 'users:signup' %}">Cadastre-se</a>
                 </li>
             {% endif %}
