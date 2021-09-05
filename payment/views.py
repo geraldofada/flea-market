@@ -28,6 +28,22 @@ def purchase_show(request):
     return render(request, 'payment/purchase_show.html', context)
 
 @login_required
+def sale_show(request):
+    categories = Category.objects.all()
+    purchase = Purchase.objects.all().filter(owner=request.user).order_by('-created_at')
+
+    page = request.GET.get('page')
+    paginator = Paginator(purchase, 6)
+    purchase_obj = paginator.get_page(page)
+
+    context = {
+        'categories': categories,
+        'purchase': purchase_obj
+    }
+
+    return render(request, 'payment/purchase_show.html', context)
+
+@login_required
 def buy(request, id):
     if request.method == 'GET':
         product = Product.objects.get(pk=id)
