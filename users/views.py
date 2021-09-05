@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from category.models import Category
 from users.forms import UserCreationForm, UserLoginForm
+from cart.models import Cart
 
 def login(request):
     if request.method == 'POST':
@@ -41,6 +42,8 @@ def signup(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            cart = Cart(owner=user)
+            cart.save()
             messages.success(request, 'Usuário criado com sucesso!')
             auth_login(request, user)
             return redirect('/')
