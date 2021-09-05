@@ -134,6 +134,9 @@ def list_by_user(request):
 
     total_per_page = 0
     for prod in prod_obj:
+        questions_count = Question.objects.filter(product=prod.id, answer__isnull=True).count()
+        prod.notification = questions_count
+
         total_per_page += (prod.price * prod.quantity)
 
     context = {

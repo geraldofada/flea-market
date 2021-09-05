@@ -77,7 +77,14 @@
         <tbody id='tbody-products'>
             {% for prod in products %}
                 <tr data-id="{{ prod.id }}">
-                    <td>{{ prod.name }}</td>
+                    <td>
+                    <a href="{% url 'product:product_by_id' prod.id %}">
+                        {% if prod.notification > 0 %}
+                            <span class="mr-3 badge badge-primary">{{ prod.notification }}</span>
+                        {% endif %}
+                        {{ prod.name }}
+                    </a>
+                    </td>
                     <td>{{ prod.small_description }}</td>
                     <td>
                         <form>
