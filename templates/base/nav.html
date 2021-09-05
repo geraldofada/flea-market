@@ -60,8 +60,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.view_name == 'payment:show' %}active{% endif %}"
-                        href="{% url 'payment:show' %}">
+                    <a class="nav-link {% if request.resolver_match.view_name == 'payment:purchase_show' %}active{% endif %}"
+                        href="{% url 'payment:purchase_show' %}">
                         Suas compras
                     </a>
                 </li>

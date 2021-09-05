@@ -12,7 +12,7 @@ from django.urls import reverse
 
 
 @login_required
-def show(request):
+def purchase_show(request):
     categories = Category.objects.all()
     purchase = Purchase.objects.all().filter(owner=request.user).order_by('-created_at')
 
@@ -25,7 +25,7 @@ def show(request):
         'purchase': purchase_obj
     }
 
-    return render(request, 'payment/show.html', context)
+    return render(request, 'payment/purchase_show.html', context)
 
 @login_required
 def buy(request, id):
@@ -47,7 +47,7 @@ def buy(request, id):
 
             messages.success(request, 'Produto comprado com sucesso!')
 
-            return redirect('payment:show')
+            return redirect('payment:purchase_show')
 
 @login_required
 def close_cart(request):
@@ -78,7 +78,7 @@ def close_cart(request):
         if purchase_ok:
             messages.success(request, 'Compra finalizada com sucesso!')
             res = {
-                'url': reverse('payment:show'),
+                'url': reverse('payment:purchase_show'),
             }
         else:
             messages.error(request, 'Pedido fora de estoque :(')
