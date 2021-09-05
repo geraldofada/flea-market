@@ -109,10 +109,16 @@ def delete(request):
     if request.method == 'GET':
         id = request.GET.get('prodId')
         product = Product.objects.get(pk=id)
+
+        price = product.price
+        quantity = product.quantity
+
         product.image.delete()
         product.delete()
         return JsonResponse({
             'removedId': id,
+            'price': price,
+            'quantity': quantity
         })
 
 @login_required

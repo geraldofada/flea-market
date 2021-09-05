@@ -122,22 +122,6 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade" tabindex="-1" id="remove-success">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Produto removido com sucesso</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok!</button>
-            </div>
-            </div>
-        </div>
-    </div>
 {% endblock main %}
 
 {% block pscript %}
@@ -289,14 +273,29 @@ function handleDelete(prodId) {
             },
             success: (res) => {
                 removedId = res.removedId;
+
+                const totalPrice = parseFloat($('#total-price').data('price'));
+                const newTotalPrice = totalPrice - (parseFloat(res.price) * parseFloat(res.quantity));
+                $('#total-price').data('price', newTotalPrice);
+                $('#total-price').html(
+                    `<strong>R$ ${newTotalPrice.toLocaleString('pt-br', {minimumFractionDigits: 2})}</strong>`
+                );
+
+                $(`[data-id='${removedId}']`).remove();
+
                 $('#remove-confirmation').modal('hide');
-                $('#remove-success').modal('toggle');
+
+                const alert = `
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        Produto removido.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                `;
+                $('#dynamic_messages').html(alert);
             },
         });
-    });
-
-    $('#remove-success').one('hidden.bs.modal', () => {
-        $(`[data-id='${removedId}']`).remove();
     });
 }
 {% endblock pscript %}
