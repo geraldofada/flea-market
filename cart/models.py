@@ -2,7 +2,6 @@ from product.models import Product
 import uuid
 from django.db import models
 from django.db.models.deletion import CASCADE
-from category.models import Category
 from users.models import User
 
 
@@ -11,3 +10,6 @@ class Cart(models.Model):
 
     owner = models.OneToOneField(User, on_delete=CASCADE)
     products = models.ManyToManyField(Product)
+
+    def __str__(self):
+        return self.owner.username

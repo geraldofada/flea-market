@@ -1,6 +1,5 @@
 from django.contrib import admin
 from product import models
-from product.models import Product
 
 class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
