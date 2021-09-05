@@ -28,23 +28,49 @@ def show(request):
 def buy(request, id):
     if request.method == 'GET':
         product = Product.objects.get(pk=id)
-        product.quantity -= 1
+        if product.quantity > 0:
+            product.quantity -= 1
 
-        purchase = Purchase(
-            owner=request.user,
-            product=product,
-            product_name=product.name,
-            product_price=product.price,
-            product_small_description=product.small_description
-        )
+            purchase = Purchase(
+                owner=request.user,
+                product=product,
+                product_name=product.name,
+                product_price=product.price,
+                product_small_description=product.small_description
+            )
 
-        product.save()
-        purchase.save()
+            product.save()
+            purchase.save()
 
-        messages.success(request, 'Produto comprado com sucesso!')
+            messages.success(request, 'Produto comprado com sucesso!')
 
-        return redirect('payment:show')
+            return redirect('payment:show')
 
 @login_required
 def close_cart(request):
-    pass
+    if request.method == 'POST':
+        product_ids = request.POST.get('productIds')
+        purchase_ok = False
+        for id in product_ids:
+            product = Product.objects.get(pk=id)
+            if product.quantity > 0:
+                purchase_ok = True
+                product.quantity -= 1
+
+                purchase = Purchase(
+                    owner=request.user,
+                    product=product,
+                    product_name=product.name,
+                    product_price=product.price,
+                    product_small_description=product.small_description
+                )
+
+                product.save()
+                purchase.save()
+
+        if purchase_ok:
+            messages.success(request, 'Compra finalizada com sucesso!')
+            return redirect('payment:show')
+        else:
+            messages.error(request, 'Produtos fora de estoque :(')
+            return redirect('cart:show')
