@@ -76,7 +76,7 @@
         </thead>
         <tbody id='tbody-products'>
             {% for prod in products %}
-                <tr data-id={{ prod.id }}>
+                <tr data-id="{{ prod.id }}">
                     <td>{{ prod.name }}</td>
                     <td>{{ prod.small_description }}</td>
                     <td>
@@ -86,13 +86,13 @@
                                 type="text"
                                 class="form-control"
                                 value="{{ prod.quantity }}"
-                                onblur="handleUpdateQuantity({{prod.id}}, this.value, event)"/>
+                                onblur="handleUpdateQuantity('{{prod.id}}', this.value, event)"/>
                         </form>
                     </td>
                     <td data-price={{ prod.price|unlocalize }}>R$ {{ prod.price|intcomma }}</td>
                     <td>
                         <a class="btn btn-primary" href="{%url 'product:edit' prod.id %}">Editar</a>
-                        <button class="btn btn-danger" onclick="handleDelete({{ prod.id }});">Remover</button>
+                        <button class="btn btn-danger" onclick="handleDelete('{{ prod.id }}');">Remover</button>
                     </td>
                 </tr>
             {% endfor %}
@@ -163,7 +163,7 @@ function handleFastCreate(form, e) {
         success: (res) => {
             const formattedPrice = parseFloat(res.price).toLocaleString('pt-br', {minimumFractionDigits: 2});
             const tr = `
-                <tr data-id=${res.id}>
+                <tr data-id="${res.id}">
                     <td>${res.name}</td>
                     <td>${res.small_description}</td>
                     <td>
@@ -173,13 +173,13 @@ function handleFastCreate(form, e) {
                                 type="text"
                                 class="form-control"
                                 value="${res.quantity}"
-                                onblur="handleUpdateQuantity(${res.id}, this.value, event)"/>
+                                onblur="handleUpdateQuantity('${res.id}', this.value, event)"/>
                         </form>
                     </td>
                     <td data-price=${parseFloat(res.price)}>R$ ${formattedPrice}</td>
                     <td>
                         <a class="btn btn-primary" href="/product/edit/${res.id}">Editar</a>
-                        <button class="btn btn-danger" onclick="handleDelete(${res.id});">Remover</button>
+                        <button class="btn btn-danger" onclick="handleDelete('${res.id}');">Remover</button>
                     </td>
                 </tr>
             `;
@@ -280,7 +280,7 @@ function handleDelete(prodId) {
     let removedId = null;
 
     $('#remove-confirmation').modal('show');
-    $('#remove-confirmation').on('click', '.btn-danger', () => {
+    $('#remove-confirmation').one('click', '.btn-danger', () => {
         $.ajax({
             url: '{%url 'product:delete'%}',
             type: 'GET',
@@ -295,8 +295,8 @@ function handleDelete(prodId) {
         });
     });
 
-    $('#remove-success').on('hidden.bs.modal', () => {
-        $(`[data-id=${removedId}]`).remove();
+    $('#remove-success').one('hidden.bs.modal', () => {
+        $(`[data-id='${removedId}']`).remove();
     });
 }
 {% endblock pscript %}
