@@ -1,9 +1,11 @@
+import uuid
 from django.db import models
 from category.models import Category
 from users.models import User
 
 
 class Product(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=12, decimal_places=2, default=1)
     small_description = models.TextField(blank=True)
@@ -23,6 +25,7 @@ class Product(models.Model):
         return self.name
 
 class Question(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     text = models.TextField(blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -35,6 +38,7 @@ class Question(models.Model):
         return self.text
 
 class Awnser(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     text = models.TextField(blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
