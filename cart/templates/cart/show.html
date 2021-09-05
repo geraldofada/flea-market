@@ -1,0 +1,125 @@
+{% extends "base/index.html" %}
+{% load static %}
+{% load humanize %}
+{% load l10n %}
+
+{% block dynamic_messages %}
+    <div id="dynamic_messages"></div>
+{% endblock dynamic_messages %}
+
+{% block breadcrumb %}{% endblock breadcrumb %}
+
+{% block main %}
+    <div id="cart-content" class="container my-lg-5">
+
+    {% if cart %}
+        <h1 class="display-5 mb-5">Produtos no carrinho</h1>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Nome do anúncio</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Preço</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody id='tbody-products'>
+                {% for prod in cart %}
+                    <tr data-id="{{ prod.id }}">
+                        <td>
+                            <a href="{% url 'product:product_by_id' prod.id %}">
+                                {{ prod.name }}
+                            </a>
+                        </td>
+                        <td>{{ prod.small_description }}</td>
+                        <td data-price={{ prod.price|unlocalize }}>R$ {{ prod.price|intcomma }}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="handleDelete('{{ prod.id }}');">Remover</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                <tr>
+                    <td colspan="2"><strong>Total:</strong></td>
+                    <td id="total-price" data-price={{ total|unlocalize }}><strong>R$ {{ total|intcomma }}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Finalizar compra</button>
+        </form>
+
+    {% else %}
+        <h1 class="display-5 mb-5">Seu carrinho está vazio :(</h1>
+    {% endif %}
+    </div>
+
+    <div class="modal fade" tabindex="-1" id="remove-confirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tem certeza que deseja remover esse produto?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-danger">Sim, remover!</button>
+            </div>
+            </div>
+        </div>
+    </div>
+{% endblock main %}
+
+{% block pscript %}
+function handleDelete(prodId) {
+    let removedId = null;
+
+    $('#remove-confirmation').modal('show');
+    $('#remove-confirmation').one('click', '.btn-danger', () => {
+        $.ajax({
+            url: '{%url 'cart:delete' %}',
+            type: 'GET',
+            data: {
+                prodId
+            },
+            success: (res) => {
+                removedId = res.removedId;
+
+                $('#total-price').data('price', res.newTotal);
+                $('#total-price').html(
+                    `<strong>R$ ${res.newTotal.toLocaleString('pt-br', {minimumFractionDigits: 2})}</strong>`
+                );
+
+                $(`[data-id='${removedId}']`).remove();
+
+                $('#remove-confirmation').modal('hide');
+
+                const alert = `
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        Produto removido do carrinho.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                `;
+                $('#dynamic_messages').html(alert);
+
+                if ($('#tbody-products').children().length - 1 === 0) {
+                    const newContent = `
+                        <h1 class="display-5 mb-5">Seu carrinho está vazio :(</h1>
+                    `;
+
+                    $('#cart-content').html(newContent);
+                }
+            },
+        });
+    });
+}
+{% endblock pscript %}
+
+{% block pagination %}{% endblock pagination %}

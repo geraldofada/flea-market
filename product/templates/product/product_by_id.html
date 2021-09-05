@@ -43,15 +43,19 @@
                 </div>
 
                 <div class="card-body">
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated and user != product.owner %}
                         <button href="#" class="btn btn-outline-primary mb-3" type="button">
                             <i class="fas fa-credit-card mr-3"></i>
                             Comprar agora
                         </button>
-                        <button href="#" class="btn btn-primary" type="button">
-                            <i class="fas fa-shopping-cart mr-3"></i>
-                            Adicionar ao carrinho
-                        </button>
+
+                        <form method="GET" action="{% url 'cart:add' product.id %}">
+                            {% csrf_token %}
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-shopping-cart mr-3"></i>
+                                Adicionar ao carrinho
+                            </button>
+                        </form>
                     {% else %}
                         <button href="#" class="btn btn-outline-primary mb-3" type="button" disabled>
                             <i class="fas fa-credit-card mr-3"></i>
@@ -70,10 +74,10 @@
 
     <div class="row">
         <div class="col-8">
-        {% if questions or user.id != product.owner.id %}
+        {% if questions or user != product.owner %}
             <h4>Perguntas</h4>
         {% endif %}
-        {% if user.id != product.owner.id %}
+        {% if user != product.owner %}
             <form method="POST" action="{% url 'product:create_question' product.id %}">
                 {% csrf_token %}
                 <div class="form-group">
@@ -121,7 +125,7 @@
                                 </p>
                             </div>
                         </div>
-                    {% elif user.is_authenticated and user.id == product.owner.id %}
+                    {% elif user.is_authenticated and user == product.owner %}
                         <form class="mt-4" method="POST" action="{% url 'product:answer_question' question.0.id %}">
                             {% csrf_token %}
                             <div class="form-group">
